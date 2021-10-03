@@ -45,7 +45,46 @@ var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
+// when user clicks on a task's text, replace it with a textarea where it can be edited
+$(".list-group").on("click", "p", function() {
+  var text = $(this)
+    .text()
+    .trim();
+  var textInput = $("<textarea>")
+    .addClass("form-control")
+    .val(text);
+  $(this).replaceWith(textInput);
+  textInput.trigger("focus");
+});
 
+// when user clicks out of textarea, save text
+$(".list-group").on("blur", "textarea", function() {
+  // get the textarea's current value/text
+  var text = $(this)
+    .val()
+    .trim();
+
+  // get the parent ul's id attribute
+  var status = $(this)
+    .closest(".list-group")
+    .attr("id")
+    .replace("list-", "");
+
+  // get the tasks's position in the list of other li elements
+  var index = $(this)
+    .closest(".list-group-item")
+    .index();
+
+  // update task and save to localStorage
+  tasks[status][index].text = text;
+  saveTasks();
+
+  // convert task text back to p
+  var taskP = $("<p>")
+    .addClass("m-1")
+    .text(text);
+  $(this).replaceWith(taskP);
+});
 
 
 // modal was triggered
