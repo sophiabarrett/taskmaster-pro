@@ -137,6 +137,46 @@ $(".list-group").on("blur", "input[type='text']", function() {
   $(this).replaceWith(taskSpan);
 });
 
+// make tasks draggable within and between lists
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"),
+  cursor: "move",
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event) {
+    console.log("activate", this);
+  },
+  deactiveate: function(event) {
+    console.log("deactiveate", this);
+  },
+  over: function(event) {
+    console.log("over", event.target);
+  },
+  out: function(event) {
+    console.log("out", event.target);
+  },
+  // once task is dropped, save new lists
+  update: function(event) {
+    // array to store task data
+    var tempArr = [];
+    // loop over current set of children in soratable list
+    $(this).children().each(function() {
+      var text = $(this).find("p").text().trim();
+      var date = $(this).find("span").text().trim();
+      // add task data to tempArr as an object
+      tempArr.push({
+        text: text,
+        date: date
+      });
+    });
+    // trim down list's ID to match object property
+    var arrName = $(this).attr("id").replace("list-", "");
+    tasks[arrName] = tempArr;
+    saveTasks();
+  }
+});
+
 
 // modal was triggered
 $("#task-form-modal").on("show.bs.modal", function() {
