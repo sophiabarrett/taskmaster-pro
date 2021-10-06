@@ -87,11 +87,9 @@ $(".list-group").on("blur", "textarea", function() {
 });
 
 // when user clicks due date, allow editing
-$(".list-group").on("click", "span", function() {
+$(".list-group").on("click", "span" , function() {
   // get current text
-  var date = $(this)
-    .text()
-    .trim();
+    var date = $(this).text().trim();
 
   // create new input element
   var dateInput = $("<input>")
@@ -102,12 +100,20 @@ $(".list-group").on("click", "span", function() {
   // swap out elements
   $(this).replaceWith(dateInput);
 
+  dateInput.datepicker({
+    minDate: 0,
+    onClose: function() {
+      // when datepicker is closed, force a "change" event on dateInput
+      $(this).trigger("change");
+    }
+  });
+
   // automatically focus on new element
   dateInput.trigger("focus");
 });
 
 // when user clicks out of date input, save new date
-$(".list-group").on("blur", "input[type='text']", function() {
+$(".list-group").on("change", "input[type='text']", function() {
   // get current text
   var date = $(this)
     .val()
@@ -190,6 +196,11 @@ $("#trash").droppable({
   out: function(event, ui) {
     console.log("out");
   }
+});
+
+// add datepicker to modal
+$("#modalDueDate").datepicker({
+  minDate: 0
 });
 
 // modal was triggered
