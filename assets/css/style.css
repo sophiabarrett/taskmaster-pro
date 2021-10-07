@@ -13,3 +13,11 @@ ul.list-group {
 .card .list-group-item:hover {
   cursor: move;
 }
+
+.dropover {
+  background-color: rgba(0,0,0,.3);
+}
+
+.dropover-active {
+  background-color: rgba(0,0,0,.9);
+}
