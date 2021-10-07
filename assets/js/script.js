@@ -16,6 +16,12 @@ var auditTask = function(taskEl) {
   }
 }
 
+setInterval(function() {
+  $(".card .list-group-item").each(function(index, el) {
+    auditTask(el);
+  });
+}, 1800000)
+
 var createTask = function(taskText, taskDate, taskList) {
   // create elements that make up a task item
   var taskLi = $("<li>").addClass("list-group-item");
@@ -221,7 +227,7 @@ $("#trash").droppable({
 
 // add datepicker to modal
 $("#modalDueDate").datepicker({
- //minDate: 0
+ minDate: 0
 });
 
 // modal was triggered
