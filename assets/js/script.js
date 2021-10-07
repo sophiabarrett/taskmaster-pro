@@ -1,5 +1,21 @@
 var tasks = {};
 
+// color code task based on due date
+var auditTask = function(taskEl) {
+  // get task's date
+  var date = $(taskEl).find("span").text().trim();
+  // convert to moment object at 5:00 pm
+  var time = moment(date, "L").set("hour", 17);
+  // remove any old classes
+  $(taskEl).removeClass("list-group-item-warning list-group-item-danger");
+  // new classes if date is near or past
+  if (time.isBefore(moment())) {
+    $(taskEl).addClass("list-group-item-danger");
+  } else if (time.isBefore(moment().add(3, "days"))) {
+    $(taskEl).addClass("list-group-item-warning");
+  }
+}
+
 var createTask = function(taskText, taskDate, taskList) {
   // create elements that make up a task item
   var taskLi = $("<li>").addClass("list-group-item");
@@ -13,6 +29,8 @@ var createTask = function(taskText, taskDate, taskList) {
   // append span and p element to parent li
   taskLi.append(taskSpan, taskP);
 
+  // color code task based on due date
+  auditTask(taskLi);
 
   // append to ul list on the page
   $("#list-" + taskList).append(taskLi);
@@ -101,7 +119,7 @@ $(".list-group").on("click", "span" , function() {
   $(this).replaceWith(dateInput);
 
   dateInput.datepicker({
-    minDate: 0,
+   minDate: 0,
     onClose: function() {
       // when datepicker is closed, force a "change" event on dateInput
       $(this).trigger("change");
@@ -141,6 +159,9 @@ $(".list-group").on("change", "input[type='text']", function() {
 
   // replace input with span element
   $(this).replaceWith(taskSpan);
+
+  // color code based on date
+  auditTask($(taskSpan).closest(".list-group-item"));
 });
 
 // make tasks draggable within and between lists
@@ -200,7 +221,7 @@ $("#trash").droppable({
 
 // add datepicker to modal
 $("#modalDueDate").datepicker({
-  minDate: 0
+ //minDate: 0
 });
 
 // modal was triggered
